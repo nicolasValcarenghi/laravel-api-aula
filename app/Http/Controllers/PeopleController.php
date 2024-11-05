@@ -8,10 +8,22 @@ use Illuminate\Http\Request;
 
 class PeopleController extends Controller
 {
-    public function list(Request $request){
-        return People::paginate(15);
+    public function fetchAll() {
+        $people = People::paginate(15);
+        return $people;
     }
-    public function store(StorePeopleRequest $people){
-        return true;
+
+    public function store(StorePeopleRequest $people) {
+        $newPeople = People::create($people->all());
+        if ($newPeople) {
+            return response()->json([
+                'message' => 'Nova pessoa criada com sucesso'
+            ]);
+        }
+        else {
+            return response()->json([
+                'message' => 'Deu ruim manin.'
+            ], 422);
+        }
     }
 }
